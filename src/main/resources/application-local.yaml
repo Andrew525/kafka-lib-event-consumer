@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+topics:
+  main:
+    name: library-events
+    group-id: library-events-listener-group
+  retry:
+    name: library-events.RETRY
+    group-id: library-events-RETRY-listener-group
+  dlt:
+    name: library-events.DLT
+    group-id: library-events-DLT-listener-group
+
+spring:
+  kafka:
+    template:
+      default-topic: ${topics.main.name}
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: ${topics.main.group-id}
+      auto-offset-reset: latest
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    listener:
+#      ack-mode: batch
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  jpa:
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+  h2:
+    console:
+      enabled: true
